@@ -143,6 +143,7 @@ class Instance
 
   # Remove instance variable.
   def remove(name)
+    name = atize(name)
     METHODS[:remove_instance_variable].bind(@delegate).call(name)
   end
 
@@ -230,17 +231,17 @@ class Instance
     list = []
 
     if selection.empty?
-      list.concat METHODS[:methods].bind(@delegate).call(name)
+      list.concat METHODS[:methods].bind(@delegate).call
     end
 
     selection.each do |s|
       case s
       when :public
-        list.concat METHODS[:public_methods].bind(@delegate).call(name)
+        list.concat METHODS[:public_methods].bind(@delegate).call
       when :protected
-        list.concat METHODS[:protected_methods].bind(@delegate).call(name)
+        list.concat METHODS[:protected_methods].bind(@delegate).call
       when :private
-        list.concat METHODS[:private_methods].bind(@delegate).call(name)
+        list.concat METHODS[:private_methods].bind(@delegate).call
       end
     end
 
@@ -257,6 +258,7 @@ class Instance
 
   #
   def variable_defined?(name)
+    name = atize(name)
     #@delegate.variable_defined?(name)
     METHODS[:instance_variable_defined?].bind(@delegate).call(name)
   end
