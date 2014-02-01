@@ -1,5 +1,6 @@
 ---
 - qed (test)
 - ae  (test)
+- simplecov (test)
 #- detroit (build)
 
