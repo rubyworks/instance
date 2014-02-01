@@ -18,23 +18,32 @@ And now demonstrate the available API.
 
 ## Instance#variables
 
-    f1 = Friend.new("John", 30, "555-1212")
-    f1.instance.variables.assert == [:@name, :@age, :@phone]
+A list of instance variables can be had via the `#variables` method.
+
+    f = Friend.new("John", 30, "555-1212")
+    f.instance.variables.assert == [:@name, :@age, :@phone]
 
 ## Instance#names
 
-    f1 = Friend.new("John", 30, "555-1212")
-    f1.instance.names.assert == ["name", "age", "phone"]
+To get a list of variables names as strings and without the `@` prefix,
+use the `#names` method.
+
+    f = Friend.new("John", 30, "555-1212")
+    f.instance.names.assert == ["name", "age", "phone"]
 
 ## Instance#keys
 
-    f1 = Friend.new("John", 30, "555-1212")
-    f1.instance.keys.assert == [:name, :age, :phone]
+Likewise, to get symbols instead of strings, use the `#keys` method.
+
+    f = Friend.new("John", 30, "555-1212")
+    f.instance.keys.assert == [:name, :age, :phone]
 
 ## Instance#values
 
-    f1 = Friend.new("John", 30, "555-1212")
-    f1.instance.values.assert == ["John", 30, "555-1212"]
+The values of the instance variables alone can be had via the `#values` method.
+
+    f = Friend.new("John", 30, "555-1212")
+    f.instance.values.assert == ["John", 30, "555-1212"]
 
 ## Instance#size
 
@@ -53,14 +62,21 @@ This method is primarily of use to the Enumerable mixin.
 
 ## Instance#update and #assign
 
-    f1 = Friend.new("John", 30, "555-1212")
-    f1.name.assert == 'John'
+The `#update` method can be used to change instance variables in mass via
+method options.
 
-    f1.instance.update(:name=>'Jerry')
-    f1.name.assert == 'Jerry'
+    f = Friend.new("John", 30, "555-1212")
+    f.name.assert == 'John'
+    f.instance.update(:name=>'Jerry')
+    f.name.assert == 'Jerry'
 
-    f1.instance.assign(:name=>'John')
-    f1.name.assert == 'John'
+## Instance#assign
+
+The `#assign` method is simply an alias for `#update`.
+
+    f = Friend.new("John", 30, "555-1212")
+    f.instance.assign(:name=>'Joe')
+    f.name.assert == 'Joe'
 
 ## Instance#to_h
 
@@ -78,10 +94,16 @@ want the `@` to stay simply pass `true` to the `#to_h` method.
 
 ## Instance#class
 
+To know the class of an object use the `#class` method.
+
     f = Friend.new("John", 30, "555-1212")
     f.instance.class.assert == ::Friend
 
+Note that to get the class of Instance itself, you must use `#object_class`. 
+
 ## Instance#id
+
+To know the id of an object use the `#id` method.
 
     f = Friend.new("John", 30, "555-1212")
     f.instance.id == f.object_id
@@ -91,14 +113,31 @@ want the `@` to stay simply pass `true` to the `#to_h` method.
     f = Friend.new("John", 30, "555-1212")
     f.instance.assert.of?(::Friend)
 
-## Instance#get and #set
+## Instance#get
+
+To get the value of a specific instance variable use the `#get` or `#[]`
+methods.
 
     f = Friend.new("John", 30, "555-1212")
     f.instance.get(:name).assert == "John"
+    f.instance[:name].assert == "John"
+
+## Instance#set
+
+To set the value of a specific instance variable use the `#set` or `#[]=`
+methods.
+
+    f = Friend.new("John", 30, "555-1212")
+
     f.instance.set(:name, "Bill")
     f.name.assert == "Bill"
 
+    f.instance[:name] = "Billy"
+    f.name.assert == "Billy"
+
 ## Instance#remove
+
+To remove an instance variable from an object use the `#remove` method.
 
     f = Friend.new("John", 30, "555-1212")
     f.instance.remove(:name)
@@ -120,6 +159,8 @@ The actual *instance method* is the object's method.
 
 ## Instance#methods
 
+We can also get a whole list of an object's methods via the `#methods` method.
+
     f = Friend.new("John", 30, "555-1212")
     f.instance.methods
     f.instance.methods(:private)
@@ -127,10 +168,18 @@ The actual *instance method* is the object's method.
     f.instance.methods(:public)
     f.instance.methods(:public, :private)
 
-## Instance#eval and #exec
+## Instance#eval
+
+To evaluate code in the context to the object's instance use the `#eval` method.
 
     f = Friend.new("John", 30, "555-1212")
     f.instance.eval("@name").assert == "John"
+
+## Instance#exec
+
+Likewise the `#exec` method can also be used.
+
+    f = Friend.new("John", 30, "555-1212")
     f.instance.exec{ @name }.assert == "John"
 
 ## Instance#send
@@ -144,6 +193,9 @@ Hence it makes sense for it to be done via the `instance` interface.
 
 ## Instance#delegate
 
+To get at the delegated object of an Instance, use the `#delegate` method.
+
     f = Friend.new("John", 30, "555-1212")
     f.instance.delegate.assert == f
+
 
