@@ -1,0 +1,58 @@
+---
+revision: 2013
+type: ruby
+sources:
+- index/
+authors:
+- name: Thomas Sawyer
+  email: transfire@gmail.com
+organizations: []
+requirements:
+- groups:
+  - test
+  development: true
+  name: qed
+- groups:
+  - test
+  development: true
+  name: ae
+conflicts: []
+alternatives: []
+resources:
+- type: home
+  uri: http://rubyworks.github.com/instance
+  label: Homepage
+- type: code
+  uri: http://github.com/rubyworks/instance
+  label: Source Code
+- type: bugs
+  uri: http://github.com/rubyworks/instance/issues
+  label: Issue Tracker
+- type: docs
+  uri: http://rubydoc.info/gems/instance
+  label: Documentation
+- type: mail
+  uri: http://groups.google.com/group/facets-universal
+  label: Mailing List
+repositories:
+- name: upstream
+  scm: git
+  uri: git@github.com:rubyworks/instance.git
+categories: []
+copyrights:
+- holder: Rubyworks
+  year: '2014'
+  license: BSD-2-Clause
+customs: []
+paths:
+  load:
+  - lib
+name: instance
+title: Instance
+summary: Object Instance API
+created: '2014-01-31'
+description: |-
+  Instance is a spin-off of Ruby Facets. It provides a simple convenient API
+  for accessing an object's state.
+version: 0.1.0
+date: '2014-01-31'

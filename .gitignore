@@ -1,0 +1,13 @@
+.rbx/
+.rdoc/
+.yardoc/
+log/
+doc/
+pkg/
+tmp/
+web/
+work/sandbox
+work/trash
+*.lock
+*.gem
+
