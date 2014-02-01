@@ -24,28 +24,33 @@ Let's use a very simple example class with which to demonstrate usage.
 ```ruby
     class Song
       attr_accessor :title
-      attr_accessor :author
+      attr_accessor :artist
       attr_accessor :length
 
-      def initialize(title, author, length)
+      def initialize(title, artist, length)
         @title  = title
-        @author = author
-        @length = length
+        @artist = artist
+        @year   = year
       end
     end
 ```
 
+Now we can create an instance of Song and work with it's state.
+
 ```ruby
     song = Song.new("Paranoid", "Black Sabbath", 1970)
 
-    song.instance.variables   #=> [:@author, :@title, :@length]
+    song.instance.variables    #=> [:@title, :@artist, :@year]
 
-    song.instance.get(:name)  #=> "Black Sabbath"
+    song.instance.get(:title)  #=> "Parinoid"
 
-    song.instance[:name]      #=> "Black Sabbath"
+    song.instance[:artist]     #=> "Black Sabbath"
+
+    song.instance.to_h        
+    #=> {:name => "Paranoid", :author => "Black Sabbath", :year => 1970)
 ```
 
-For more a more complete set of usage examples see the QED documentation.
+For a more complete set of usage examples see the QED documentation.
 
 
 ## Copyrights
