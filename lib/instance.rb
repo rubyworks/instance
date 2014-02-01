@@ -64,9 +64,13 @@ class Instance
     @cache[delegate] ||= Instance.new(delegate)
   end
 
-  # Initialize new Instance instance.
+  # Initialize new Instance instance. If the delegate is a type of 
+  # Module or Class then the instance will be extended with the
+  # {ModuleExtensions} mixin.
+  # 
   def initialize(delegate)
     @delegate = delegate
+    extend ModuleExtensions if Module === delegate
   end
 
   # The delegated object.
@@ -236,11 +240,11 @@ class Instance
 
     selection.each do |s|
       case s
-      when :public
+      when :public, :all
         list.concat METHODS[:public_methods].bind(@delegate).call
-      when :protected
+      when :protected, :all
         list.concat METHODS[:protected_methods].bind(@delegate).call
-      when :private
+      when :private, :all
         list.concat METHODS[:private_methods].bind(@delegate).call
       end
     end
@@ -271,6 +275,9 @@ class Instance
     METHODS[:object_id].bind(@delegate).call
   end
 
+  # Fallback to get the real class of the Instance delegate itself.
+  alias :object_class :class
+
   # Get object's instance id.
   #
   # Returns [Class]
@@ -289,6 +296,61 @@ private
   def atize(name)
     name.to_s !~ /^@/ ? "@#{name}" : name
   end
+
+  ##
+  # ModuleExtensions provides some additional methods for Module and Class
+  # objects.
+  #
+  # TODO: Are there any other module/class methods that need to be provided?
+  #
+  module ModuleExtensions
+		# Store Object methods so they cannot be overriden by the delegate class.
+		METHODS = {}
+
+		def self.freeze_method(name)
+		  METHODS[name.to_sym] = Module.instance_method(name)
+		end
+
+		freeze_method :instance_methods
+		freeze_method :public_instance_methods
+		freeze_method :protected_instance_methods
+		freeze_method :private_instance_methods
+
+    # List of method definitions in a module or class.
+    #
+    # selection - Any of `:public`, `:protected` or `:private` which
+    #             is used to select specific subsets of methods.
+    #
+    # Returns [Array<Symbol>]
+    def method_definitions(*selection)
+		  list = []
+
+		  if selection.empty?
+		    list.concat METHODS[:instance_methods].bind(@delegate).call
+		  end
+
+		  selection.each do |s|
+		    case s
+		    when :public, :all
+		      list.concat METHODS[:public_instance_methods].bind(@delegate).call
+		    when :protected, :all
+		      list.concat METHODS[:protected_instance_methods].bind(@delegate).call
+		    when :private, :all
+		      list.concat METHODS[:private_instance_methods].bind(@delegate).call
+		    end
+		  end
+
+		  return list
+    end
+
+    # Shorter alias for #method_definitions.
+    alias :definitions :method_definitions
+  end
+
+  #
+  #module ClassExtensions
+  #
+  #end
 
 end
 
