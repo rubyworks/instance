@@ -1,6 +1,10 @@
-# Instance class is a delgator for any object which provides
-# an elegant and protected interface to an object's state, i.e.
-# its *instance*.
+# Instance class is a delgator for any object which provides an elegant
+# and protected interface to an object's state, i.e. its *instance*.
+# Elgence is achieved by providing a single interface, the `instance`
+# method. Protection is made possible by caching all the built-in
+# Ruby methods used to interface with an object's internal state.
+# This way they can not be overriden by some errant code or third
+# party library.
 #
 # Examples
 #
@@ -12,13 +16,10 @@
 #   end
 #
 #   f1 = Friend.new("John", 30, "555-1212")
-#   f1.instance
+#   f1.instance.get(:name)  #=> "John"
+#   f1.instance.update(:name=>'Jerry')
+#   f1.instance.get(:name)  #=> "Jerry"
 #
-#   f1.instance.update({:name=>'Jerry'})
-#   f1.instance
-#
-# TODO: Should we add `is_a?` and `kind_of?` too?
-
 class Instance
   include Enumerable
 
@@ -45,15 +46,8 @@ class Instance
   freeze_method :instance_variable_defined?
   freeze_method :remove_instance_variable
   freeze_method :send
-
-  #module Kernel
-  #  # Returns an instance of Instance for +self+,
-  #  # which allows convenient access to an object's
-  #  # internals.
-  #  def instance
-  #    Instance.instance(self)
-  #  end
-  #end
+  freeze_method :is_a?
+  freeze_method :kind_of?
 
   # Instance cache acts as a global cache for instances of Instance.
   @cache = {}
@@ -119,26 +113,34 @@ class Instance
     h
   end
 
-  # TODO: Not sure if this should be used.
-  alias_method :to_hash, :to_h
-
+  # Get instance variable's value. Will return `nil` if the
+  # variable does not exist.
   #
+  # Returns the value of the instance variable.
   def get(name)
     name = atize(name)
-    #@delegate.instance_variable_get(name)
-    METHODS[:instance_variable_get].bind(@delegate).call(name)
+    bind_call(:instance_variable_get, name)
   end
   alias :[] :get
 
+  # Set instance variable.
   #
+  # Returns the set value.
   def set(name, value)
     name = atize(name)
-    #@delegate.instance_variable_set(name,value)
-    METHODS[:instance_variable_set].bind(@delegate).call(name,value)
+    bind_call(:instance_variable_set, name, value)
   end
   alias :[]= :set
 
+  # Set an instance variable given a name and a value in an array pair.
   #
+  # Example
+  #
+  #   f = Friend.new
+  #   f.instance << [:name, "John"]
+  #   f.name #=> "John"
+  #
+  # Returns the set value.
   def <<(pair)
     name, value = *pair
     name = atize(name)
@@ -148,7 +150,7 @@ class Instance
   # Remove instance variable.
   def remove(name)
     name = atize(name)
-    METHODS[:remove_instance_variable].bind(@delegate).call(name)
+    bind_call(:remove_instance_variable, name)
   end
 
   # Set instance variables given a +hash+.
@@ -163,6 +165,7 @@ class Instance
   #   @a   #=> 1
   #   @b   #=> 2
   #
+  # Returns nothing.
   def update(hash)
     hash.each do |pair|
       self << pair
@@ -174,8 +177,7 @@ class Instance
 
   # Same as #instance_variables.
   def variables
-    #@delegate.instance_variables
-    METHODS[:instance_variables].bind(@delegate).call
+    bind_call(:instance_variables)
   end
 
   # Instance vairable names as symbols.
@@ -207,14 +209,12 @@ class Instance
 
   # Instance evaluation.
   def eval(*a,&b)
-    #@delegate.instance_eval(*a,&b)
-    METHODS[:instance_eval].bind(@delegate).call(*a,&b)
+    bind_call(:instance_eval, *a, &b)
   end
 
   # Instance execution.
   def exec(*a,&b)
-    #@delegate.instance_exec(*a,&b)
-    METHODS[:instance_exec].bind(@delegate).call(*a,&b)
+    bind_call(:instance_exec, *a, &b)
   end
 
   # Get method. Usage of this might seem strange because Ruby's own
@@ -224,8 +224,7 @@ class Instance
   #
   # Returns [Method].
   def method(name)
-    #@delegate.instance_exec(*a,&b)
-    METHODS[:method].bind(@delegate).call(name)
+    bind_call(:method, name)
   end
 
   # Returns list of method names.
@@ -235,17 +234,17 @@ class Instance
     list = []
 
     if selection.empty?
-      list.concat METHODS[:methods].bind(@delegate).call
+      list.concat bind_call(:methods)
     end
 
     selection.each do |s|
       case s
       when :public, :all
-        list.concat METHODS[:public_methods].bind(@delegate).call
+        list.concat bind_call(:public_methods)
       when :protected, :all
-        list.concat METHODS[:protected_methods].bind(@delegate).call
+        list.concat bind_call(:protected_methods)
       when :private, :all
-        list.concat METHODS[:private_methods].bind(@delegate).call
+        list.concat bind_call(:private_methods)
       end
     end
 
@@ -256,23 +255,36 @@ class Instance
   #
   # Returns [Boolean]
   def of?(a_class)
-    #@delegate.instance_of?(aclass)
-    METHODS[:instance_of?].bind(@delegate).call(a_class)
+    bind_call(:instance_of?, a_class)
   end
 
+  # Is the object an instance of a given class or subclass?
   #
+  # Returns [Boolean]
+  def is_a?(a_class)
+    bind_call(:is_a?, a_class)
+  end
+
+  # Is the object an instance of a given class or subclass?
+  #
+  # Returns [Boolean]
+  def kind_of?(a_class)
+    bind_call(:kind_of?, a_class)
+  end
+
+  # Is an instaance variable defined?
+  #
+  # Returns [Boolean]
   def variable_defined?(name)
     name = atize(name)
-    #@delegate.variable_defined?(name)
-    METHODS[:instance_variable_defined?].bind(@delegate).call(name)
+    bind_call(:instance_variable_defined?, name)
   end
 
   # Get object's instance id.
   #
   # Returns [Integer]
   def id
-    #@delegate.variable_defined?(name)
-    METHODS[:object_id].bind(@delegate).call
+    bind_call(:object_id)
   end
 
   # Fallback to get the real class of the Instance delegate itself.
@@ -282,13 +294,12 @@ class Instance
   #
   # Returns [Class]
   def class
-    #@delegate.variable_defined?(name)
-    METHODS[:class].bind(@delegate).call
+    bind_call(:class)
   end
 
   # Send message to instance.
   def send(*a, &b)
-    METHODS[:send].bind(@delegate).call(*a, &b)
+    bind_call(:send, *a, &b)
   end
 
 private
@@ -304,18 +315,18 @@ private
   # TODO: Are there any other module/class methods that need to be provided?
   #
   module ModuleExtensions
-		# Store Object methods so they cannot be overriden by the delegate class.
-		METHODS = {}
+    # Store Object methods so they cannot be overriden by the delegate class.
+    METHODS = {}
 
-		def self.freeze_method(name)
-		  METHODS[name.to_sym] = Module.instance_method(name)
-		end
+    def self.freeze_method(name)
+      METHODS[name.to_sym] = Module.instance_method(name)
+    end
 
-		freeze_method :instance_method
-		freeze_method :instance_methods
-		freeze_method :public_instance_methods
-		freeze_method :protected_instance_methods
-		freeze_method :private_instance_methods
+    freeze_method :instance_method
+    freeze_method :instance_methods
+    freeze_method :public_instance_methods
+    freeze_method :protected_instance_methods
+    freeze_method :private_instance_methods
 
     # List of method definitions in a module or class.
     #
@@ -324,24 +335,24 @@ private
     #
     # Returns [Array<Symbol>]
     def method_definitions(*selection)
-		  list = []
+      list = []
 
-		  if selection.empty?
-		    list.concat METHODS[:instance_methods].bind(@delegate).call
-		  end
+      if selection.empty?
+        list.concat bind_call(:instance_methods)
+      end
 
-		  selection.each do |s|
-		    case s
-		    when :public, :all
-		      list.concat METHODS[:public_instance_methods].bind(@delegate).call
-		    when :protected, :all
-		      list.concat METHODS[:protected_instance_methods].bind(@delegate).call
-		    when :private, :all
-		      list.concat METHODS[:private_instance_methods].bind(@delegate).call
-		    end
-		  end
+      selection.each do |s|
+        case s
+        when :public, :all
+          list.concat bind_call(:public_instance_methods)
+        when :protected, :all
+          list.concat bind_call(:protected_instance_methods)
+        when :private, :all
+          list.concat bind_call(:private_instance_methods)
+        end
+      end
 
-		  return list
+      return list
     end
 
     # Shorter alias for #method_definitions.
@@ -351,17 +362,23 @@ private
     #
     # Returns an unbound method object. [UnboundMethod] 
     def method_definition(name)
-		  METHODS[:instance_method].bind(@delegate).call(name)
+      bind_call(:instance_method, name)
     end
 
     alias :definition :method_definition
   end
 
-  #
+  # TODO: Are there any method we need specific to a Class vs a Module?
   #module ClassExtensions
   #
   #end
 
+  private
+
+  # Helper method for binding the method to the delegate object and calling it.
+  def bind_call(method_name, *args, &block) 
+    METHODS[mathod_name].bind(@delegate).call(&args, &block)
+  end
 end
 
 
