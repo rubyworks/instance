@@ -58,5 +58,5 @@ created: '2014-01-31'
 description: |-
   Instance is a spin-off of Ruby Facets. It provides a simple convenient API
   for accessing an object's state.
-version: 0.1.0
-date: '2014-02-01'
+version: 0.2.0
+date: '2014-02-02'
