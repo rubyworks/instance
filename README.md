@@ -55,9 +55,9 @@ For a more complete set of usage examples see the QED documentation.
 
 ## Copyrights
 
-Copyright 2014 [Rubyworks](http://rubyworks.github.io)
+Copyright &copy; 2014 [Rubyworks](http://rubyworks.github.io)
 
 BSD-2-Clause License
 
-See [[LICENSE.txt]] file for license details.
+See [LICENSE.txt](LICENSE.txt) file for license details.
 
