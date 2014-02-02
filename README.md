@@ -40,14 +40,17 @@ Now we can create an instance of Song and work with it's state.
 ```ruby
     song = Song.new("Paranoid", "Black Sabbath", 1970)
 
-    song.instance.variables    #=> [:@title, :@artist, :@year]
+    song.instance.variables
+    # => [:@title, :@artist, :@year]
 
-    song.instance.get(:title)  #=> "Parinoid"
+    song.instance.get(:title)
+    # => "Parinoid"
 
-    song.instance[:artist]     #=> "Black Sabbath"
+    song.instance[:artist]
+    # => "Black Sabbath"
 
     song.instance.to_h        
-    #=> {:name => "Paranoid", :author => "Black Sabbath", :year => 1970)
+    # => {:name => "Paranoid", :author => "Black Sabbath", :year => 1970)
 ```
 
 For a more complete set of usage examples see the QED documentation.
