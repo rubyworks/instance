@@ -60,7 +60,7 @@ This method is primarily of use to the Enumerable mixin.
     f.instance.assert.variable_defined?(:@name)
     f.instance.assert.variable_defined?(:name)
 
-## Instance#update and #assign
+## Instance#update
 
 The `#update` method can be used to change instance variables in mass via
 method options.
