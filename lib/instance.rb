@@ -311,6 +311,7 @@ private
 		  METHODS[name.to_sym] = Module.instance_method(name)
 		end
 
+		freeze_method :instance_method
 		freeze_method :instance_methods
 		freeze_method :public_instance_methods
 		freeze_method :protected_instance_methods
@@ -345,6 +346,15 @@ private
 
     # Shorter alias for #method_definitions.
     alias :definitions :method_definitions
+
+    # Get a first-class method definition object.
+    #
+    # Returns an unbound method object. [UnboundMethod] 
+    def method_definition(name)
+		  METHODS[:instance_method].bind(@delegate).call(name)
+    end
+
+    alias :definition :method_definition
   end
 
   #
