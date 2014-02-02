@@ -5,6 +5,7 @@ lib/instance.rb
 lib/instance.yml
 demo/applique/env.rb
 demo/instance.md
+demo/module.md
 README.md
 HISTORY.md
 LICENSE.txt
