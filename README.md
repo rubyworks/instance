@@ -53,7 +53,7 @@ Now we can create an instance of Song and work with it's state.
     # => {:name => "Paranoid", :author => "Black Sabbath", :year => 1970)
 ```
 
-For a more complete set of usage examples see the [QED][http://rubyworks.github.com/instance/qed.html] documentation.
+For a more complete set of usage examples see the [QED](http://rubyworks.github.com/instance/qed.html) documentation.
 
 
 ## Copyrights
