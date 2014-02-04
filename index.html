@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Instance by rubyworks</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Instance</h1>
+          <h2>Slick Object State API</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/rubyworks/instance/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/rubyworks/instance/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/rubyworks/instance" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="instance" class="anchor" href="#instance"><span class="octicon octicon-link"></span></a>Instance</h1>
+
+<h2>
+<a name="what-is-it" class="anchor" href="#what-is-it"><span class="octicon octicon-link"></span></a>What Is It?</h2>
+
+<p>Instance is a <em>convenient</em> and <em>safe</em> API for accessing and manipulating
+an object's state.</p>
+
+<h2>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How Does It Work</h2>
+
+<p>Instance adds a method to all objects called <code>#instance</code>. It returns
+an <code>Instance</code> delegator that provides the full interface to the
+object's state.</p>
+
+<p>Of course, without implementing this in C, directly in the Ruby source,
+we  are left to depend on the current provisions Ruby has for accessing
+the state of an object. So there are some limitations here. However,
+we implement the Ruby code in such a way as to minimize the downsides
+by caching all the method definitions the Instance class will utilize.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Let's use a very simple example class with which to demonstrate usage.</p>
+
+<div class="highlight highlight-ruby"><pre>    <span class="k">class</span> <span class="nc">Song</span>
+      <span class="kp">attr_accessor</span> <span class="ss">:title</span>
+      <span class="kp">attr_accessor</span> <span class="ss">:artist</span>
+      <span class="kp">attr_accessor</span> <span class="ss">:year</span>
+
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">artist</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
+        <span class="vi">@title</span>  <span class="o">=</span> <span class="n">title</span>
+        <span class="vi">@artist</span> <span class="o">=</span> <span class="n">artist</span>
+        <span class="vi">@year</span>   <span class="o">=</span> <span class="n">year</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+</pre></div>
+
+<p>Now we can create an instance of Song and work with it's state.</p>
+
+<div class="highlight highlight-ruby"><pre>    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"Paranoid"</span><span class="p">,</span> <span class="s2">"Black Sabbath"</span><span class="p">,</span> <span class="mi">1970</span><span class="p">)</span>
+
+    <span class="n">song</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">variables</span>
+    <span class="c1"># =&gt; [:@title, :@artist, :@year]</span>
+
+    <span class="n">song</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+    <span class="c1"># =&gt; "Parinoid"</span>
+
+    <span class="n">song</span><span class="o">.</span><span class="n">instance</span><span class="o">[</span><span class="ss">:artist</span><span class="o">]</span>
+    <span class="c1"># =&gt; "Black Sabbath"</span>
+
+    <span class="n">song</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">to_h</span>        
+    <span class="c1"># =&gt; {:name =&gt; "Paranoid", :author =&gt; "Black Sabbath", :year =&gt; 1970)</span>
+</pre></div>
+
+<p>For a more complete set of usage examples see the QED documentation.</p>
+
+<h2>
+<a name="copyrights" class="anchor" href="#copyrights"><span class="octicon octicon-link"></span></a>Copyrights</h2>
+
+<p>Copyright © 2014 <a href="http://rubyworks.github.io">Rubyworks</a></p>
+
+<p>BSD-2-Clause License</p>
+
+<p>See <a href="LICENSE.txt">LICENSE.txt</a> file for license details.</p>
+        </section>
+
+        <footer>
+          Instance is maintained by <a href="https://github.com/rubyworks">rubyworks</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
