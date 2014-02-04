@@ -44,7 +44,7 @@ Now we can create an instance of Song and work with it's state.
     # => [:@title, :@artist, :@year]
 
     song.instance.get(:title)
-    # => "Parinoid"
+    # => "Paranoid"
 
     song.instance[:artist]
     # => "Black Sabbath"
@@ -53,7 +53,7 @@ Now we can create an instance of Song and work with it's state.
     # => {:name => "Paranoid", :author => "Black Sabbath", :year => 1970)
 ```
 
-For a more complete set of usage examples see the QED documentation.
+For a more complete set of usage examples see the [QED][http://rubyworks.github.com/instance/qed.html] documentation.
 
 
 ## Copyrights
