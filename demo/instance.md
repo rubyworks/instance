@@ -189,7 +189,7 @@ method visibility is somehting that should only be done as an act of *metaprogra
 Hence it makes sense for it to be done via the `instance` interface.
 
     f = Friend.new("John", 30, "555-1212")
-    f.send(:name).assert == "John"
+    f.instance.send(:name).assert == "John"
 
 ## Instance#delegate
 
