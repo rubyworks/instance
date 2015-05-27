@@ -1,10 +1,18 @@
----
-script: "bundle exec qed"
+language: ruby
+bundler_args: --without guard
 rvm:
-  - 1.8.7
-  - 1.9.2
-  - 1.9.3
   - 2.0.0
-  - rbx
-  - jruby
-
+  - 2.2
+  - ruby-head
+matrix:
+  allow_failures:
+    - rvm:
+      - ruby-head
+script: bundle exec rspec
+addons:
+  code_climate:
+    repo_token: "313a19165c7a59866f44bbcfedabd28c6185dbe5aae0ee4314cc937ca4cd443b"
+branches:
+  only: master
+notifications:
+  email: false

@@ -1,0 +1,7 @@
+languages:
+  Ruby: true
+  JavaScript: false
+  PHP: false
+  Python: false
+exclude_paths:
+- "spec"

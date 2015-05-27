@@ -1,5 +1,18 @@
 # RELEASE HISTORY
 
+## 1.1.0 | 2015-05-27
+
+This release prepares for gemification.
+
+Changes:
+
+* Add RSpec Tests
+* Prep for gem publishing
+* Merge code with NullVoxPopuli/meta_instance
+* New Architecture
+* Rename to MetaInstance, replacing existing meta_instance gem
+
+
 ## 0.2.0 | 2014-02-02
 
 This release adds an extra set of methods for modules and classes.
