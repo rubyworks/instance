@@ -2,11 +2,12 @@
 revision: 2013
 type: ruby
 sources:
-- index/
+- index.yml
 authors:
 - name: Thomas Sawyer
   email: transfire@gmail.com
-organizations: []
+organizations:
+- name: Rubyworks
 requirements:
 - groups:
   - test
@@ -49,14 +50,16 @@ copyrights:
   license: BSD-2-Clause
 customs: []
 paths:
-  load:
+  lib:
   - lib
 name: instance
 title: Instance
-summary: Object Instance API
-created: '2014-01-31'
-description: |-
-  Instance is a spin-off of Ruby Facets. It provides a simple convenient API
-  for accessing an object's state.
 version: 0.2.0
-date: '2014-02-02'
+summary: Object Instance API
+description: Instance provides a simple and convenient API for accessing an object's
+  internal state. In this author's humble opinion it is the interface Ruby would do
+  well to adopt as offical. (Instance is a spin-off of Ruby Facets.)
+slogan: Know Your Objects!
+created: '2014-01-31'
+scm_uri: https://github.com/rubyworks/instance/tree/master
+date: '2015-05-28'
